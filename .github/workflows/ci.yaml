@@ -5,6 +5,8 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
 
 jobs:
   build_and_deploy:
@@ -34,7 +36,7 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.DEPLOY_KEY }}
           publish_dir: ./build
           publish_branch: gh-pages
           full_commit_message: ${{ github.event.head_commit.message }}
