@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "Mixin JS SDK",
+    "description": "The title in the navbar"
+  },
+  "item.label.Docs": {
+    "message": "文档",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  },
+  "item.label.Server": {
+    "message": "服务端",
+    "description": "Navbar item with label Server"
+  },
+  "item.label.Web": {
+    "message": "浏览器",
+    "description": "Navbar item with label Web"
+  }
+}
