@@ -5,7 +5,7 @@ const config = {
   title: 'Mixin JS SDK',
   tagline: 'Mixin JS SDK Documents',
   url: 'https://liuzemei.github.io/mixin-js-sdk-docs/',
-  baseUrl: '/mixin-js-sdk-docs',
+  baseUrl: '/mixin-js-sdk-docs/',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
