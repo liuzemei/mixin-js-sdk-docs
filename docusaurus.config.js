@@ -19,7 +19,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://liuzemei.github.com/facebook/docusaurus/edit/main/website/',
+          editUrl: 'https://github.com/liuzemei/mixin-js-sdk-docs/edit/master/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
