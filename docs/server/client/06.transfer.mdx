@@ -1,0 +1,75 @@
+---
+sidebar_position: 6
+---
+
+# 转账
+
+:::tip 提示
+本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649911)
+:::
+
+### 1. 转账给指定 mixin 用户
+
+```js
+client.transfer({
+  asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c',
+  opponent_id: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115',
+  amount: '1',
+  trace_id: client.newUUID(),
+  memo: '转账测试',
+});
+```
+
+:::tip 提示
+
+1. opponent_id 就是收款人的 user_id.
+2. amount 为转账数量，最小精度支持小数点后 8 位。
+3. trace_id 是一个 uuid
+4. memo 为转账备注，注意不要超过 200 字符。
+
+:::
+
+返回值
+
+```json
+{
+  "type": "transfer",
+  "snapshot_id": "55a7e4b0-cd67-449f-a6ca-8451b17a3a44",
+  "opponent_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+  "amount": "-1",
+  "opening_balance": "1429370.8175271",
+  "closing_balance": "1429369.8175271",
+  "trace_id": "5a0eb95f-40da-4aaf-ad9c-b2513926a31d",
+  "memo": "转账测试",
+  "created_at": "2022-08-11T04:16:14.152053Z",
+  "counter_user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115"
+}
+```
+
+### 2. 根据 `trace_id` 获取转账详情
+
+```js
+client.readTransfer('5a0eb95f-40da-4aaf-ad9c-b2513926a31d');
+```
+
+返回值
+
+```json
+{
+  "type": "transfer",
+  "snapshot_id": "55a7e4b0-cd67-449f-a6ca-8451b17a3a44",
+  "opponent_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+  "amount": "-1",
+  "opening_balance": "1429370.8175271",
+  "closing_balance": "1429369.8175271",
+  "trace_id": "5a0eb95f-40da-4aaf-ad9c-b2513926a31d",
+  "memo": "转账测试",
+  "created_at": "2022-08-11T04:16:14.152053Z",
+  "transaction_hash": "3e93520ff5fe57bf523fbc126f803b9fce91ab172dde491fb2c1d8c89b1b282b",
+  "snapshot_hash": "e28a375f83b621ed15d8518dd05bc4a4f13268fd093121d19fa4c9c1421b243d",
+  "snapshot_at": "2022-08-11T04:16:15.3433313Z",
+  "counter_user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115"
+}
+```

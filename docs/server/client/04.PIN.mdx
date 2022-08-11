@@ -1,0 +1,32 @@
+---
+sidebar_position: 4
+---
+
+# PIN
+
+### 1. 确认 PIN 码
+
+```js
+const pin = '';
+client.verifyPin(pin?);
+```
+
+:::tip 提示
+初始化如果传入了 pin 的话，这里可以不传入。如果传入的话，就会自动忽略之前的 pin 码
+:::
+
+返回值
+
+正确将返回：
+`client.userMe()`相同的机器人信息。
+
+错误将返回：
+
+```json
+{
+  "status": 202,
+  "code": 20119,
+  "description": "PIN incorrect.",
+  "request_id": "a9d80bdf-xxxx-xxxx-xxxx-f9ceaf5ac4a3"
+}
+```

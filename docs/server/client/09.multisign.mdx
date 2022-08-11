@@ -1,0 +1,214 @@
+---
+sidebar_position: 9
+---
+
+# 多签
+
+:::tip 提示
+
+1. 完整示例 [请参照这里](https://github.com/liuzemei/bot-api-nodejs-client/blob/main/example/multisigns.js)
+
+:::
+
+## 多重签名介绍
+
+## 步骤拆解
+
+### 1. 转账给多签账户
+
+```js
+client.transaction({
+  asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c',
+  amount: '0.0001',
+  trace_id: client.newUUID(),
+  memo: '多钱转账测试',
+  opponent_multisig: {
+    receivers: ['e8e8cd79-cd40-4796-8c54-3a13cfe50115', client.keystore.client_id],
+    threshold: 1,
+  },
+});
+```
+
+返回值
+
+```json
+{
+  "type": "raw",
+  "snapshot_id": "1232ee53-29a8-4c07-aba7-96126b28d476",
+  "opponent_key": "",
+  "opponent_receivers": ["e8e8cd79-cd40-4796-8c54-3a13cfe50115", "11efbb75-e7fe-44d7-a14f-698535289310"],
+  "opponent_threshold": 1,
+  "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+  "amount": "-0.0001",
+  "opening_balance": "1429369.8175271",
+  "closing_balance": "1429369.8174271",
+  "trace_id": "32ec22fc-a1c4-4877-b850-af0d04339fa5",
+  "memo": "多钱转账测试",
+  "state": "signed",
+  "created_at": "1970-01-01T00:03:39+00:03",
+  "transaction_hash": "4311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7",
+  "snapshot_hash": "",
+  "snapshot_at": "0001-01-01T00:00:00Z"
+}
+```
+
+### 2. 获取多签 utxo
+
+```js
+client.readMultisigOutputs(['e8e8cd79-cd40-4796-8c54-3a13cfe50115', '11efbb75-e7fe-44d7-a14f-698535289310'], 1);
+```
+
+```json
+[
+  {
+    "type": "multisig_utxo",
+    "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+    "utxo_id": "251a7107-d74f-3ceb-883f-4ec52b1e487d",
+    "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+    "transaction_hash": "4311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7",
+    "output_index": 0,
+    "amount": "0.0001",
+    "threshold": 1,
+    "members": ["11efbb75-e7fe-44d7-a14f-698535289310", "e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+    "memo": "多钱转账测试",
+    "state": "unspent",
+    "sender": "11efbb75-e7fe-44d7-a14f-698535289310",
+    "created_at": "2022-08-11T04:22:42.262566Z",
+    "updated_at": "2022-08-11T04:22:42.262566Z",
+    "signed_by": "",
+    "signed_tx": ""
+  }
+]
+```
+
+### 3. 构建多签交易 raw
+
+```js
+await client.makeMultisignTransaction({
+  memo: '多钱转账退回测试',
+  inputs:  [{
+    "type": "multisig_utxo",
+    "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+    "utxo_id": "251a7107-d74f-3ceb-883f-4ec52b1e487d",
+    "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+    "transaction_hash": "4311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7",
+    "output_index": 0,
+    "amount": "0.0001",
+    "threshold": 1,
+    "members": ["11efbb75-e7fe-44d7-a14f-698535289310", "e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+    "memo": "多钱转账测试",
+    "state": "unspent",
+    "sender": "11efbb75-e7fe-44d7-a14f-698535289310",
+    "created_at": "2022-08-11T04:22:42.262566Z",
+    "updated_at": "2022-08-11T04:22:42.262566Z",
+    "signed_by": "",
+    "signed_tx": ""
+  }],
+  outputs: [
+    {
+      receivers: ['e8e8cd79-cd40-4796-8c54-3a13cfe50115'],
+      threshold: 1,
+      '0.0001',
+    },
+  ],
+  hint: client.newUUID(),
+});
+```
+
+:::tip 提示
+
+1. inputs 来自于上一步中的数组的某一项。
+2. outputs 是指定转账的用户。
+
+:::
+
+```
+77770002b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d800014311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7000000000000000000010000000227100001df5638e36c7e40749233fa58133e33987c59c0d2c9788baee8e31e9375f2df7647bf4fd995f02955ff92fad20dcb8e0dac8080b34082d13b4407aba7f1f6f5bf0003fffe0100000018e5a49ae992b1e8bdace8b4a6e98080e59b9ee6b58be8af950000
+```
+
+### 4. 通过 raw 构建签名交易请求
+
+```js
+client.createMultisig(
+  'sign',
+  '77770002b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d800014311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7000000000000000000010000000227100001df5638e36c7e40749233fa58133e33987c59c0d2c9788baee8e31e9375f2df7647bf4fd995f02955ff92fad20dcb8e0dac8080b34082d13b4407aba7f1f6f5bf0003fffe0100000018e5a49ae992b1e8bdace8b4a6e98080e59b9ee6b58be8af950000'
+);
+```
+
+:::tip 提示
+参数为上一步的返回值
+:::
+
+```json
+{
+  "type": "multisig_request",
+  "request_id": "0ae5f6d6-3d58-499d-a53c-4e85d140e8e4",
+  "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+  "amount": "0.0001",
+  "threshold": 1,
+  "senders": ["11efbb75-e7fe-44d7-a14f-698535289310", "e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+  "receivers": ["e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+  "signers": [],
+  "memo": "多钱转账退回测试",
+  "action": "sign",
+  "state": "initial",
+  "transaction_hash": "555b4cc2b950ce62ad3842890a9e04bfd865c69ce0a700dc2f2fc2b4c52b3474",
+  "raw_transaction": "77770002b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d800014311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7000000000000000000010000000227100001df5638e36c7e40749233fa58133e33987c59c0d2c9788baee8e31e9375f2df7647bf4fd995f02955ff92fad20dcb8e0dac8080b34082d13b4407aba7f1f6f5bf0003fffe0100000018e5a49ae992b1e8bdace8b4a6e98080e59b9ee6b58be8af950000",
+  "created_at": "1970-01-01T00:03:39+00:03",
+  "code_id": "3ae9d32b-8a17-4bc8-84f8-7339713d5295"
+}
+```
+
+### 5. 对需要签名的交易进行签名
+
+```js
+client.signMultisig('0ae5f6d6-3d58-499d-a53c-4e85d140e8e4');
+```
+
+:::tip 提示
+参数为上一步返回值的 `request_id`
+:::
+
+```json
+{
+  "type": "multisig_request",
+  "request_id": "0ae5f6d6-3d58-499d-a53c-4e85d140e8e4",
+  "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "asset_id": "965e5c6e-434c-3fa9-b780-c50f43cd955c",
+  "amount": "0.0001",
+  "threshold": 1,
+  "senders": ["11efbb75-e7fe-44d7-a14f-698535289310", "e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+  "receivers": ["e8e8cd79-cd40-4796-8c54-3a13cfe50115"],
+  "signers": ["11efbb75-e7fe-44d7-a14f-698535289310"],
+  "memo": "多钱转账退回测试",
+  "action": "sign",
+  "state": "signed",
+  "transaction_hash": "555b4cc2b950ce62ad3842890a9e04bfd865c69ce0a700dc2f2fc2b4c52b3474",
+  "raw_transaction": "77770002b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d800014311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7000000000000000000010000000227100001df5638e36c7e40749233fa58133e33987c59c0d2c9788baee8e31e9375f2df7647bf4fd995f02955ff92fad20dcb8e0dac8080b34082d13b4407aba7f1f6f5bf0003fffe0100000018e5a49ae992b1e8bdace8b4a6e98080e59b9ee6b58be8af95ffffff01e2b38aab1bd66f3b04f3d4638c2a69790532a6440790e7c9075a1ffc58e4d4a915bfa44b72537e90e4ff573feb3db0ef5c0ac02cffed2236bf076281e9670f0d00000102",
+  "created_at": "2022-08-11T05:08:09.418028Z",
+  "code_id": "3ae9d32b-8a17-4bc8-84f8-7339713d5295"
+}
+```
+
+### 6. 将签名完成的交易发送给主网
+
+```js
+client.sendRawTransaction(
+  '77770002b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d800014311322b5cb810ba1df4de329ec855f6c067cc44c8d6f18f95e5f24598cd83c7000000000000000000010000000227100001df5638e36c7e40749233fa58133e33987c59c0d2c9788baee8e31e9375f2df7647bf4fd995f02955ff92fad20dcb8e0dac8080b34082d13b4407aba7f1f6f5bf0003fffe0100000018e5a49ae992b1e8bdace8b4a6e98080e59b9ee6b58be8af95ffffff01e2b38aab1bd66f3b04f3d4638c2a69790532a6440790e7c9075a1ffc58e4d4a915bfa44b72537e90e4ff573feb3db0ef5c0ac02cffed2236bf076281e9670f0d00000102'
+);
+```
+
+:::tip 提示
+参数为上一步中的 `raw_transaction`
+:::
+
+```json
+{
+  "hash": "555b4cc2b950ce62ad3842890a9e04bfd865c69ce0a700dc2f2fc2b4c52b3474"
+}
+```
+
+:::tip
+至此，交易完成。此时收款人不会有任何卡片提示，不过在钱包里的对应资产记录里会多一条多签的转账记录。
+:::

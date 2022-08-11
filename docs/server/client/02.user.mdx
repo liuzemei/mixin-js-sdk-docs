@@ -1,17 +1,21 @@
 ---
 sidebar_position: 2
 ---
+
 # 用户
-:::tip提示
-1. 本篇文档均需要获取到 `client` 对象，请在 `client` 对象初始化后再进行操作。[请点击这里查看文档](/docs/server/client/prev)
-2. 本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649910)
+
+:::tip 提示
+本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649910)
 :::
 
 ### 1. 用户授权登陆
+
 ```js
-client.authorizeToken(code)
+client.authorizeToken(code);
 ```
+
 返回值
+
 ```json
 {
   "access_token": "user authorization token",
@@ -19,18 +23,23 @@ client.authorizeToken(code)
 }
 ```
 
-:::tip提示
+:::tip 提示
+
 1. 这里的 code 获取，需要客户端完成授权操作。 [点击这里查看客户端端代码](/docs/web/user#2-获取授权的-code) 。
 2. 如果初始化 `client` 的时候，携带了 `client_secret`，就只需要传入 `code` 参数即可。
 3. 如果没有，则需要传入第二个参数 `client_secret`。
 4. 获取到的 `access_token` 可以访问对应 `scope` 的接口。[具体内容请查看这里](/docs/server/userWithToken)
+
 :::
 
 ### 2. 获取用户信息
+
 ```js
-client.useMe()
+client.useMe();
 ```
+
 返回值
+
 ```json
 {
   "type": "user",
@@ -54,21 +63,13 @@ client.useMe()
     "name": "node-sdk-test",
     "icon_url": "",
     "description": "https://mixin.one/authhttps://mixin.one/authhttps://mixin.one/auth",
-    "capabilities": [
-      "CONTACT",
-      "GROUP"
-    ],
-    "resource_patterns": [
-      "https://mixin.one/"
-    ],
+    "capabilities": ["CONTACT", "GROUP"],
+    "resource_patterns": ["https://mixin.one/"],
     "category": "OTHER",
     "creator_id": "105f6e8b-d249-4b4d-9beb-e03cefaebc37",
     "updated_at": "2021-08-27T01:47:18.941742117Z",
     "app_secret": "",
-    "capabilites": [
-      "CONTACT",
-      "GROUP"
-    ]
+    "capabilites": ["CONTACT", "GROUP"]
   },
   "session_id": "7412bbcd-218d-43f6-a9a7-46e10ff0021a",
   "pin_token": "",
@@ -86,16 +87,22 @@ client.useMe()
   "transfer_confirmation_threshold": 100
 }
 ```
-:::tip提示
+
+:::tip 提示
+
 1. 如果是机器人调用，则会返回 `app` 字段。否则没有
 2. 如果是机器人调用，`phone` 字段和 `user_id` 一样
+
 :::
 
 ### 3. 获取多个用户信息
+
 ```js
-client.readUsers(['e8e8cd79-cd40-4796-8c54-3a13cfe50115'])
+client.readUsers(['e8e8cd79-cd40-4796-8c54-3a13cfe50115']);
 ```
+
 返回值
+
 ```json
 [
   {
@@ -114,16 +121,20 @@ client.readUsers(['e8e8cd79-cd40-4796-8c54-3a13cfe50115'])
   }
 ]
 ```
-:::tip提示
+
+:::tip 提示
 注意这里只能用 `user_id` 来查询。
 :::
 
 ### 4. 根据 `user_id` 或 `identity_number` 获取单个用户信息
+
 ```js
-client.readUser('30265')
-client.readUser('e8e8cd79-cd40-4796-8c54-3a13cfe50115')
+client.readUser('30265');
+client.readUser('e8e8cd79-cd40-4796-8c54-3a13cfe50115');
 ```
+
 返回值
+
 ```json
 {
   "type": "user",
@@ -140,17 +151,23 @@ client.readUser('e8e8cd79-cd40-4796-8c54-3a13cfe50115')
   "is_scam": false
 }
 ```
-:::tip提示
+
+:::tip 提示
+
 1. 用 `identity_number` 查询的时候，有访问频率限制。**频繁请求**会被服务器拒绝。
 2. 用 `user_id` 查询没有频率限制。
+
 :::
 
 ### 5. 根据 `identity_number` 或 `phone` 获取单个用户信息
+
 ```js
-client.searchUser('30265')
-client.searchUser('+8617718523520')
+client.searchUser('30265');
+client.searchUser('+8617718523520');
 ```
+
 返回值
+
 ```json
 {
   "type": "user",
@@ -167,13 +184,7 @@ client.searchUser('+8617718523520')
   "is_scam": false
 }
 ```
-:::tip提示
+
+:::tip 提示
 此接口有访问频率限制。**频繁请求**会被服务器拒绝。
 :::
-
-### 6. 获取联系人
-```js
-```
-返回值
-```json
-```
