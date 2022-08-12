@@ -167,7 +167,14 @@ client.signMultisig('0ae5f6d6-3d58-499d-a53c-4e85d140e8e4');
 ```
 
 :::tip 提示
-参数为上一步返回值的 `request_id`
+
+1. 参数为上一步返回值的 `request_id`
+2. 如果是需要 `Mixin messenger` 来进行签名
+3. 则让用户访问 `mixin://codes/3ae9d32b-8a17-4bc8-84f8-7339713d5295`
+4. `3ae9d32b-8a17-4bc8-84f8-7339713d5295` 为上一步返回值的 `code_id`
+5. 注意，签名的用户需要是 members 的成员。
+6. 用户签完名之后，需要轮询上述 [第2步](/#2-获取多签-utxo)
+
 :::
 
 ```json

@@ -3,3 +3,293 @@ sidebar_position: 10
 ---
 
 # 会话
+
+### 1. 创建会话
+
+1. 创建单聊会话
+
+> 1. 注意：如果发送消息返回了 `403`，有可能是由于没有创建会话导致的。单聊会话只用创建一次，之后如果还收到了 `403`，那么说明对方屏蔽了陌生人聊天。
+> 2. 如果已经创建过会话，则会直接返回会话信息。
+
+```js
+client.createContactConversation('e8e8cd79-cd40-4796-8c54-3a13cfe50115');
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "dd219235-e83a-3b85-a13f-d0f20fa0e833",
+  "creator_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "category": "CONTACT",
+  "name": "",
+  "icon_url": "",
+  "announcement": "",
+  "created_at": "2019-12-27T13:13:20.465183257Z",
+  "code_id": "",
+  "code_url": "",
+  "mute_until": "2019-12-27T13:13:20.465185812Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "", "created_at": "2019-12-27T13:13:20.465183257Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "OWNER", "created_at": "2019-12-27T13:13:20.465183257Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+2. 创建群组会话
+
+```js
+client.createGroupConversation(client.newUUID(), '测试群组', [{ user_id: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115', role: 'ADMIN' }]);
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群组",
+  "icon_url": "",
+  "announcement": "",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "ADMIN", "created_at": "2022-08-12T02:27:43.723884Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+> 有朋友可能有疑问，为啥两个人有三个 session ？
+>
+> 这是因为电脑端也登录了。电脑端和手机端是两个 session。
+
+### 2. 更新群组会话
+
+```js
+client.updateConversation('8043dba1-e742-4c54-8425-1b8e188313a8', {
+  name: '测试群聊2',
+  announcement: '测试公告',
+});
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "ADMIN", "created_at": "2022-08-12T02:27:43.723884Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+### 3. 获取会话
+
+```js
+client.readConversation('8043dba1-e742-4c54-8425-1b8e188313a8');
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "ADMIN", "created_at": "2022-08-12T02:27:43.723884Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+### 4. 移除群组成员
+
+```js
+client.removeParticipants('8043dba1-e742-4c54-8425-1b8e188313a8', ['e8e8cd79-cd40-4796-8c54-3a13cfe50115']);
+```
+
+> 1. 第一个参数为上一步中 `conversation_id`
+> 2. 第二个参数是一个数组，里边是要移除用户的 `user_id`
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [{ "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" }],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" }
+  ],
+  "circles": []
+}
+```
+
+### 5. 添加群组成员
+
+```js
+client.addParticipants('8043dba1-e742-4c54-8425-1b8e188313a8', ['e8e8cd79-cd40-4796-8c54-3a13cfe50115']);
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "", "created_at": "2022-08-12T02:50:35.506458Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+### 6. 将群组成员设置为管理员
+
+```js
+client.adminParticipants('8043dba1-e742-4c54-8425-1b8e188313a8', ['e8e8cd79-cd40-4796-8c54-3a13cfe50115']);
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "code_url": "https://mixin.one/codes/a9ac55c3-1dbc-49c8-8150-af72e6707524",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "ADMIN", "created_at": "2022-08-12T02:50:35.506458Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
+
+### 7. 更灵活的管理群成员的方法
+
+```js
+// 等同于上述的 移除群成员
+client.managerConversation('8043dba1-e742-4c54-8425-1b8e188313a8', 'REMOVE', [{ user_id: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115' }]);
+// 等同于上述的 添加群成员
+client.managerConversation('8043dba1-e742-4c54-8425-1b8e188313a8', 'ADD', [{ user_id: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115' }]);
+// 等同于上述的 设为管理员
+client.managerConversation('8043dba1-e742-4c54-8425-1b8e188313a8', 'ROLE', [{ user_id: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115', role: 'ADMIN' }]);
+```
+
+> 当然，还可以直接添加群成员为管理员。上述的三个方法就是封装了该方法。
+
+### 8. 更新群组的加入链接
+
+群组加的加入链接为: 上一步返回值中的 `code_url`
+如果希望该 `code_url` 失效，那么可以调用这个方法。
+
+```js
+client.rotateConversation('8043dba1-e742-4c54-8425-1b8e188313a8');
+```
+
+```json
+{
+  "type": "conversation",
+  "conversation_id": "8043dba1-e742-4c54-8425-1b8e188313a8",
+  "creator_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "category": "GROUP",
+  "name": "测试群聊2",
+  "icon_url": "",
+  "announcement": "测试公告",
+  "created_at": "2022-08-12T02:27:43.688706829Z",
+  "code_id": "f95890d5-a7e4-4f75-a413-b910e0080b3d",
+  "code_url": "https://mixin.one/codes/f95890d5-a7e4-4f75-a413-b910e0080b3d",
+  "mute_until": "2021-08-12T02:27:43.697018758Z",
+  "expire_in": 0,
+  "participants": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "role": "OWNER", "created_at": "2022-08-12T02:27:43.723884Z" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "role": "ADMIN", "created_at": "2022-08-12T02:50:35.506458Z" }
+  ],
+  "participant_sessions": [
+    { "type": "participant", "user_id": "11efbb75-e7fe-44d7-a14f-698535289310", "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94", "public_key": "czPRr4JrzeuFsNStu-Nl5KloHQGHs6uluViwfWeojgk" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "-iwowminOjaTHj9bCBxQrV0isbtSluUw81J_0jF-4T4" },
+    { "type": "participant", "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115", "session_id": "69dbf2e7-aab7-4efe-81cf-17b2544453a8", "public_key": "pz9B5cxYCzMacVJT_6CifL8m-Atqql0juWOiZxQKqXc" }
+  ],
+  "circles": []
+}
+```
