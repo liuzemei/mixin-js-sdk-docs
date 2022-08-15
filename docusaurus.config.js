@@ -64,7 +64,7 @@ const config = {
         //   position: 'right',
         // },
         {
-          href: 'https://github.com/liuzemei/mixin-js-sdk',
+          href: 'https://github.com/liuzemei/mixin-js-sdk-docs',
           label: 'GitHub',
           position: 'right',
         },
