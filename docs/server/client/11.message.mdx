@@ -8,3 +8,227 @@ sidebar_position: 11
 本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649912)
 :::
 
+## 发消息给单个用户
+
+### 1. 发送文字消息
+
+```js
+client.sendTextMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', 'hello');
+```
+
+> 1. 第一个参数是要发送对象的 `user_id`
+> 2. 第二个参数是要发送的文字
+
+返回值
+
+```json
+{
+  "type": "message",
+  "representative_id": "",
+  "quote_message_id": "",
+  "conversation_id": "dd219235-e83a-3b85-a13f-d0f20fa0e833",
+  "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+  "session_id": "afad4c37-b90e-43c2-adc2-e6e1bd31ae94",
+  "message_id": "c81e774b-a762-49f8-9114-35900be2c90e",
+  "category": "PLAIN_TEXT",
+  "data": "aGVsbG8=",
+  "data_base64": "aGVsbG8",
+  "status": "",
+  "source": "CREATE_MESSAGE",
+  "silent": false,
+  "expire_in": 0,
+  "created_at": "2022-08-19T03:06:17.363215481Z",
+  "updated_at": "2022-08-19T03:06:17.363215481Z"
+}
+```
+
+> 消息的返回值差不多大同小异，以下就省略消息的返回值部分，只介绍调用部分。
+
+### 2. 发送文章消息
+
+```js
+client.sendPostMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', '# 一级标题\n## 二级标题\n 正文..');
+```
+
+### 3. 上传文件
+
+```js
+const fs = require('fs');
+const file = fs.readFileSync('./somefile');
+client.uploadFile(file);
+```
+
+返回值
+
+```json
+{
+  "view_url": "https://mixin-assets-cn.zeromesh.net/mixin/attachments/1660891914-33073792652464c197de2ce934719a2d1224050d48bee89e41129e3088db50e1",
+  "attachment_id": "fbd7d403-3b39-4f8f-afcf-2b2aac42588f"
+}
+```
+
+> 注意这里返回的两个值，一个是文件的预览地址，一个是文件的唯一标识。后边所有关于文件发送都会用到这个 `attachment_id`
+
+### 4. 发送图片消息
+
+```js
+client.sendImageMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 图片的类型，如：image/jpeg
+  width: 300, // 图片的宽度
+  height: 300, // 图片的高度
+  size: 300, // 图片的大小，单位是字节
+  thumbnail: '', // 可选，缩略图的 base64
+});
+```
+
+### 5. 发送文件消息
+
+```js
+client.sendDataMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 图片的类型，如：image/jpeg
+  size: 300, // 图片的大小，单位是字节
+  name: '', // 文件显示的名字
+});
+```
+
+### 6. 发送贴纸消息
+
+```js
+client.sendStickerMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  sticker_id: '', // 贴纸的唯一标识
+  name: '', // 可选，贴纸的名字
+  album_id: '', // 可选，贴纸的所属相册
+});
+```
+
+### 7. 发送联系人消息
+
+```js
+client.sendContactMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  user_id: '',
+});
+```
+
+### 8. 发送卡片消息
+
+```js
+client.sendAppCardMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  app_id: '', // 一般直接使用自己机器人的 client_id
+  icon_url: '', // 卡片的图标链接
+  title: '', // 卡片的标题
+  description: '', // 卡片的描述
+  action: '', // 卡片的跳转链接
+  shareable: false, // 可选，是否可分享
+});
+```
+
+### 9. 发送音频消息
+
+```js
+client.sendAudioMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 音频的类型，目前只支持：audio/ogg
+  size: 300, // 音频的大小，单位是字节
+  duration: 300, // 音频的时长，单位是秒
+  wave_form: '', // 可选，音频轨迹 base64
+});
+```
+
+### 10. 发送直播消息
+
+```js
+client.sendLiveMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  width: 300, // 直播卡片的宽度
+  height: 300, // 直播卡片的高度
+  thumb_url: '', // 直播卡片的缩略图链接
+  url: '', // 直播卡片的视频地址
+  shareable: false, // 可选，是否可分享
+});
+```
+
+### 11. 发送视频消息
+
+```js
+client.sendVideoMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 视频的类型，目前只支持：video/mp4
+  size: 300, // 视频的大小，单位是字节
+  duration: 300, // 视频的时长，单位是秒
+  width: 300, // 视频的宽度
+  height: 300, // 视频的高度
+  thumbnail: '', // 可选，视频的缩略图 base64
+});
+```
+
+### 12. 发送位置消息
+
+```js
+client.sendLocationMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  latitude: '', // 纬度
+  longitude: '', // 经度
+  address: '', // 可选
+  name: '', // 可选
+});
+```
+
+### 13. 发送按钮消息
+
+```js
+client.sendButtonMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  text: '', // 消息的文本内容
+  buttons: [
+    {
+      label: '', // 按钮的文本内容
+      color: '', // 16进制按钮的颜色，如： #FF0000
+      action: '', // 按钮的跳转链接
+    },
+  ],
+});
+```
+
+### 14. 发送撤回消息
+
+```js
+client.sendRecallMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  message_id: '', // 消息的唯一标识
+});
+```
+
+### 15. 自行构建消息
+
+```js
+client.sendMessage({
+  conversation_id: '', // 会话的唯一标识
+  message_id: '', // 消息的唯一标识
+  category: '', // 消息的类型，详细的类型请查看 SDK
+  data: '', // base64 的消息内容
+  recipient_id: '', // 可选，消息的接收者，发给群聊时，不带这个参数就会发给群聊的每一个人。带上的话，就只会发给群聊的某一个人
+  representative_id: '', // 可选，消息的发送者，
+  quote_message_id: '', // 可选，被引用的消息的唯一标识
+});
+```
+
+> 以上消息都封装了这个接口。
+
+## 2. 发送多条消息
+
+```js
+client.sendMessages([
+  {
+    conversation_id: '', // 会话的唯一标识
+    message_id: '', // 消息的唯一标识
+    category: '', // 消息的类型，详细的类型请查看 SDK
+    data: '', // base64 的消息内容
+    recipient_id: '', // 可选，消息的接收者，发给群聊时，不带这个参数就会发给群聊的每一个人。带上的话，就只会发给群聊的某一个人
+    representative_id: '', // 可选，消息的发送者，
+    quote_message_id: '', // 可选，被引用的消息的唯一标识
+  },
+]);
+```
+
+> 1. 最大限制为 100 条。
+> 2. 整条消息最大限制为 1MB 。
+> 3. 超过上述限制，会发送失败。
+> 4. 如果调用此接口给同一个用户发送多条消息，那么消息送达顺序无法保证。如果需要保证消息发送顺序，请逐条发送。

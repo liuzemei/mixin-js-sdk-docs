@@ -49,7 +49,7 @@ const config = {
       items: [
         {
           type: 'doc',
-          docId: 'server/test',
+          docId: 'server/intro',
           position: 'left',
           label: 'Server',
         },
