@@ -8,14 +8,14 @@ sidebar_position: 1
 - 支持全：ts 支持，各种类型友好
 
 :::tip提示
-注意：只能在浏览器环境使用，不能在 node 环境使用，如果需要 node 环境，请 [点击这里](https://github.com/MixinNetwork/bot-api-nodejs-client)
+注意：只能在浏览器环境使用，不能在 node 环境使用，如果需要 node 环境，请 [点击这里](https://github.com/liuzemei/mixin-web-sdk)
 :::
 
 ## 安装
 
 ### 1. 通过 npm 引入
 ```shell
-npm install @mixin.dev/web
+npm install mixin-web-sdk
 ```
 
 ### 2. 通过 cdn 引入
@@ -26,7 +26,7 @@ npm install @mixin.dev/web
 ### 1. 通过 npm 引入
 
 ```js
-import { Mixin } from '@mixin.dev/web'
+import { Mixin } from 'mixin-web-sdk'
 // 获取 Mixin 网络内资产排名前 100 的资产
 console.log(Mixin)
 Mixin.readNetworkAssetsTop().then(console.log)
