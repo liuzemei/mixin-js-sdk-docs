@@ -29,6 +29,16 @@ client.transaction({
 });
 ```
 
+参数介绍
+
+| 参数                        | 类型          | 介绍                                                            |
+| :-------------------------- | :------------ | :-------------------------------------------------------------- |
+| asset_id                    | UUID String   | 资产 ID                                                         |
+| amount                      | String        | 转账金额，例如 "0.01"，支持小数点后最多 8 位                    |
+| trace_id                    | UUID String   | 可选，主要用于防止重复支付                                      |
+| opponent_multisig.receivers | []UUID String | 多签用户组                                                      |
+| opponent_multisig.threshold | UUID String   | 多签阀值，即超过这个数才会执行交易，小于或等于 receivers.length |
+
 返回值
 
 ```json
@@ -57,6 +67,13 @@ client.transaction({
 ```js
 client.readMultisigOutputs(['e8e8cd79-cd40-4796-8c54-3a13cfe50115', '11efbb75-e7fe-44d7-a14f-698535289310'], 1);
 ```
+
+:::tip 提示
+
+1. 第一个参数为，多签用户组
+2. 第二个参数为，多签阀值
+
+:::
 
 ```json
 [
@@ -118,7 +135,7 @@ await client.makeMultisignTransaction({
 :::tip 提示
 
 1. inputs 来自于上一步中的数组的某一项。
-2. outputs 是指定转账的用户。
+2. outputs 是指定转账的用户。若转出的对象也为多签用户的话，请自行构建。
 
 :::
 
@@ -173,7 +190,7 @@ client.signMultisig('0ae5f6d6-3d58-499d-a53c-4e85d140e8e4');
 3. 则让用户访问 `mixin://codes/3ae9d32b-8a17-4bc8-84f8-7339713d5295`
 4. `3ae9d32b-8a17-4bc8-84f8-7339713d5295` 为上一步返回值的 `code_id`
 5. 注意，签名的用户需要是 members 的成员。
-6. 用户签完名之后，需要轮询上述 [第2步](/#2-获取多签-utxo)
+6. 用户签完名之后，需要轮询上述 [第 2 步](/#2-获取多签-utxo)
 
 :::
 

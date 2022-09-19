@@ -1,11 +1,20 @@
 ---
-sidebar_position: 11
+sidebar_position: 4
 ---
 
 # 消息
 
 :::tip 提示
 本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649912)
+:::
+
+:::danger
+
+如果服务端返回`403`，可能有两种情况
+
+1. 机器人跟用户还没有创建过会话，请先参见 [上一章《创建单聊会话》](/docs/server/client/conversation#1-创建会话)
+2. 该用户可以禁止陌生人跟他联系了。这种情况只能让该用户`解除禁止陌生人联系`，或者让该用户`添加机器人为好友`。
+
 :::
 
 ## 发消息给单个用户
@@ -211,6 +220,38 @@ client.sendMessage({
 ```
 
 > 以上消息都封装了这个接口。
+
+### 16. 发送 `ack` 消息
+
+```js
+client.sendAcknowledgement({
+  message_id: '', // 接收到的消息标识
+  status: '', // 消息的状态， 'READ' 表示已读， 'DELIVERED' 表示已送达
+});
+```
+
+:::tip
+
+1. `ack` 消息是用来告诉服务器，消息已经被读取或者送达了，这样服务器才会把消息的状态改为已读或者已送达。
+2. `DELIVERED` 表示消息已经送达，在 `Mixin Messenger` 上标识为灰色双勾。
+3. `READ` 表示消息已经读取，在 `Mixin Messenger` 上标识为蓝色双勾。
+
+### 17. 批量发送 `ack` 消息
+
+```js
+client.sendAcknowledgements([
+  {
+    message_id: '', // 接收到的消息标识
+    status: '', // 消息的状态， 'READ' 表示已读， 'DELIVERED' 表示已送达
+  },
+]);
+```
+
+:::tip
+
+1. 数组长度最多为 100.
+
+:::
 
 ## 2. 发送多条消息
 

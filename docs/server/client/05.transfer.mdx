@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 5
 ---
 
 # 转账
@@ -20,14 +20,15 @@ client.transfer({
 });
 ```
 
-:::tip 提示
+转账参数介绍
 
-1. opponent_id 就是收款人的 user_id.
-2. amount 为转账数量，最小精度支持小数点后 8 位。
-3. trace_id 是一个 uuid
-4. memo 为转账备注，注意不要超过 200 字符。
-
-:::
+| 参数        | 类型        | 介绍                                         |
+| :---------- | :---------- | :------------------------------------------- |
+| asset_id    | UUID String | 资产 ID                                      |
+| opponent_id | UUID String | 收款人的 user_id                             |
+| amount      | String      | 转账金额，例如 "0.01"，支持小数点后最多 8 位 |
+| trace_id    | UUID String | 可选，主要用于防止重复支付                   |
+| memo        | UUID String | 可选，转账备注，最多 200 字符                |
 
 返回值
 

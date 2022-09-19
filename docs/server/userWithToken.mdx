@@ -1,3 +1,61 @@
-
 # 用户(使用 token 访问)
 
+:::tip
+
+1. 在通过 `code` 成功获取到 `access_token` 之后，可以通过 `access_token` 获取用户信息。
+2. 也可以获取更多的信息，如用户的 `资产列表/转账列表/nft` 等等，都需要用户主动的授权才可以获取到。
+
+:::
+
+## 1. 直接通过 token 构建一个 `client`
+
+```js
+const client = new Client(null, 'Please replace here with user token');
+```
+
+> 1. 之后再参见 [上一章](/docs/server/client/prev) 来调用
+> 2. 支持的方法和参数都是一样的
+> 3. 如 `client.userMe()` `client.readAssets()` `client.readSnapshots()` 等等
+
+## 2. 通过 `SDK` 导入单独的方法来使用
+
+> 每次都 `new` 一个 `Client` 实例，是有一定开销的，更多的时候，我们只是为了单独的调用`某个方法`来获取一些关于用户的信息。所以， `SDK` 内部直接导出了一些单独的方法，来方便调用。
+
+> 不一样的地方在于，每个方法第一个参数都是 `token`
+
+### 1. 获取用户基本信息
+
+```js
+const { userMe } = require('mixin-node-sdk');
+userMe('Please replace here with user token');
+```
+
+### 2. 获取用户资产信息
+
+```js
+const { readAssets, readAsset } = require('mixin-node-sdk');
+readAssets('Please replace here with user token');
+readAsset('Please replace here with user token', 'assetId replace here');
+```
+
+### 3. 获取用户转账列表
+
+```js
+const { readSnapshots, readSnapshot } = require('mixin-node-sdk');
+readSnapshots('Please replace here with user token');
+readSnapshot('Please replace here with user token', 'snapshotId replace here');
+```
+
+### 4. 获取用户的联系人信息
+
+```js
+const { readFriends } = require('mixin-node-sdk');
+readFriends('Please replace here with user token');
+```
+
+### 5. 获取用户的黑名单用户信息
+
+```js
+const { readBlockUsers } = require('mixin-node-sdk');
+readBlockUsers('Please replace here with user token');
+```

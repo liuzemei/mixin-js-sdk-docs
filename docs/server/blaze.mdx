@@ -1,0 +1,51 @@
+---
+sidebar_position: 4
+---
+
+# Blaze Client
+
+### 简介
+
+1. `Blaze Client` 使 `bot` 具有了 `Websocket` 的能力，可以直接与 `Mixin Messenger` 的消息服务连接， 使之可以与 `Mixin Messenger` 上的用户进行实时的消息交互。
+2. 同时也会接收 `ack`、`conversation`、`transfer` 的消息，这些消息将在后文中逐步提到。
+3. `Blaze Client` 继承自 `Client` 类，因此也具有了 `Client` 类的所有功能。
+
+:::danger 提示
+
+普通用户给机器人发的消息，超过一个周没有接收的消息，则会被 `Mixin Messenger` 服务端丢弃。
+
+:::
+
+### 1. 创建 `websocket` 连接
+
+```js
+const { BlazeClient } = require('mixin-node-sdk');
+
+let client = new BlazeClient(
+  {
+    client_id: '',
+    session_id: '',
+    pin_token: '',
+    private_key: '',
+    pin: '',
+  },
+  { parse: true }
+);
+```
+
+:::tip
+
+1. 第一个参数为 `keystore`
+2. 第二个参数可选，介绍如下
+
+:::
+
+| 参数    | 类型    | 介绍                                     |
+| :------ | :------ | :--------------------------------------- |
+| parse   | boolean | 是否将 data 解析为明文                   |
+| syncAck | boolean | 是否在接收到用户的消息，处理完后自动 ack |
+
+> TIPS:
+>
+> 1. data 默认为 `base64` 编码，如果需要解析为明文，需要将 `parse` 设置为 `true`
+> 2. 默认是需要手动调用 `ack` 方法，将消息标记为已读，如果设置了 `syncAck` 为 `true`，则会在接收到用户的消息，处理完后自动 ack. [具体方法参见](/docs/server/client/message#16-发送-ack-消息)
