@@ -1,9 +1,14 @@
-# 用户(使用 token 访问)
+---
+sidebar_position: 5
+---
+
+# 使用 Token 访问用户信息
 
 :::tip
 
 1. 在通过 `code` 成功获取到 `access_token` 之后，可以通过 `access_token` 获取用户信息。
 2. 也可以获取更多的信息，如用户的 `资产列表/转账列表/nft` 等等，都需要用户主动的授权才可以获取到。
+3. 授权信息详情，[请参见这里](/docs/web/auth)
 
 :::
 
@@ -38,6 +43,8 @@ readAssets('Please replace here with user token');
 readAsset('Please replace here with user token', 'assetId replace here');
 ```
 
+> 需要**资产**授权，[详情请参见这里](/docs/web/auth)
+
 ### 3. 获取用户转账列表
 
 ```js
@@ -46,6 +53,8 @@ readSnapshots('Please replace here with user token');
 readSnapshot('Please replace here with user token', 'snapshotId replace here');
 ```
 
+> 需要**转账**授权，[详情请参见这里](/docs/web/auth)
+
 ### 4. 获取用户的联系人信息
 
 ```js
@@ -53,9 +62,22 @@ const { readFriends } = require('mixin-node-sdk');
 readFriends('Please replace here with user token');
 ```
 
+> 需要**联系人**授权，[详情请参见这里](/docs/web/auth)
+
 ### 5. 获取用户的黑名单用户信息
 
 ```js
 const { readBlockUsers } = require('mixin-node-sdk');
 readBlockUsers('Please replace here with user token');
 ```
+
+> 需要**联系人**授权，[详情请参见这里](/docs/web/auth)
+
+### 6. 获取用户某个资产的所有提现地址
+
+```js
+const { readAddresses } = require('mixin-node-sdk');
+readAddresses('Please replace here with user token', 'assetId replace here');
+```
+
+> 需要**资产**授权，[详情请参见这里](/docs/web/auth)

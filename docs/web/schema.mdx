@@ -1,8 +1,8 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
-# Schema
+# Mixin 交互
 
 用于与原生客户端进行交互的 api。
 
@@ -46,6 +46,42 @@ Mixin.openAppHomePage(app_id, { foo: 'bar' });
 1. 第一个参数 app_id 是机器人的 client_id 或者可以理解为 机器人的 user_id
 2. 第二个参数是 打开机器人首页时，可以在 url 上传的参数。对应机器人可以通过 url 获取到这个 `{foo:"bar"}`
 
+:::
+
+### 4. 修改当前页面的主题色(手机顶部状态栏的颜色)
+
+```js
+Mixin.changeTheme('#ff0000');
+```
+
+### 5. 打开某个用户/机器人的转账页面
+
+```js
+const user_id = 'uuid';
+Mixin.openTransferPage(user_id);
+```
+
+### 6. 唤起原生的语音播放器
+
+```js
+mixin.audiosPlayList(['https://xxx.mp3', 'https://xxx.mp3', 'https://xxx.mp3']);
+```
+
+:::tip 提醒
+
+1. 支持多个 mp3 文件的播放，顺序播放。
+2. 需要 Mixin 版本大于 `0.30.0`， Mixin 版本判断请参见 [Mixin 版本判断](/docs/web/utils#8-检查用户-mixin-版本是否高于指定版本)
+
+:::
+
+### 7. 关闭页面
+
+```js
+Mixin.close();
+```
+
+:::tip 提醒
+需要 Mixin 版本大于 `0.33.0`， Mixin 版本判断请参见 [Mixin 版本判断](/docs/web/utils#8-检查用户-mixin-版本是否高于指定版本)
 :::
 
 ## 二、分享相关
@@ -120,3 +156,128 @@ Mixin.shareLiveToFriend(liveCard);
 | width     | Number      | 卡片的宽度                   |
 | height    | Number      | 卡片的高度                   |
 | thumb_url | String      | 封面的图片地址，可以为空     |
+
+## 三、支付相关
+
+### 1. 唤起支付弹框
+
+调用之后需要用户自行输入 6 位 `PIN` 码后才能完成支付。
+
+```js
+const params = {
+  asset: 'c94ac88f-4671-3976-b60a-09064f1811e8',
+  amount: '0.0001',
+  memo: '支付测试',
+  recipient: 'e8e8cd79-cd40-4796-8c54-3a13cfe50115',
+  trace: 'uuid',
+};
+Mixin.pay(params); // 无返回值
+```
+
+| 参数      | 类型        | 介绍                     |
+| :-------- | :---------- | :----------------------- |
+| asset     | UUID String | 资产的 `asset_id`        |
+| amount    | String      | 卡片的宽度               |
+| memo      | String      | 可选，卡片的高度         |
+| recipient | UUID String | 封面的图片地址，可以为空 |
+| trace     | UUID String | 封面的图片地址，可以为空 |
+
+### 2. 轮询用户是否支付
+
+参数可以直接复用上一步的参数。
+
+```js
+Mixin.getPayment(params).then(console.log);
+```
+
+返回值
+
+```json
+{
+  "recipient": {...},// 收款人的 user 信息
+  "asset": {...}, // 支付的资产信息
+  "amount": "0.01", // 支付的金额
+  "status": "pending" // 支付的状态，pending 为未支付，paid 为已支付
+}
+```
+
+### 3. 打开某笔交易详情页面
+
+```js
+Mixin.openSnapshotPage({
+  trace_id: '95be8359-ed82-479c-bcb8-46ba16e0280d',
+  // snapshot_id: '', // 二选一。两个都传的话，优先使用 trace_id
+});
+```
+
+:::tip 提示
+
+1. 参数为 `trace_id` 或者 `snapshot_id` ，二选一。两个都传的话，优先使用 `trace_id`。
+2. 只能本人查看于自己相关的交易详情，不能查看别人的。
+
+:::
+
+### 4. 一键添加提现地址
+
+调用之后需要用户自行输入 6 位 `PIN` 码后才能完成添加。
+
+```js
+const params = {
+  asset: '',
+  label: '',
+  destination: '',
+  tag: '',
+};
+Mixin.addAddress(params);
+```
+
+| 参数        | 类型        | 介绍                                   |
+| :---------- | :---------- | :------------------------------------- |
+| asset       | UUID String | 资产的 `asset_id`                      |
+| label       | String      | 给这个地址的备注信息                   |
+| destination | String      | 提现的地址                             |
+| tag         | String      | 可选，但某些需要 `memo` 的链就必填了。 |
+
+### 5. 一键删除提现地址
+
+调用之后需要用户自行输入 6 位 `PIN` 码后才能完成删除。
+
+```js
+const params = {
+  asset: '',
+  address: '',
+};
+Mixin.deleteAddress(params);
+```
+
+参数解释见上一步。
+
+### 6. 提现
+
+调用之后需要用户自行输入 6 位 `PIN` 码后才能完成提现。
+
+```js
+const params = {
+  asset: '',
+  address: '',
+  amount: '',
+  memo: '',
+  trace: '',
+};
+Mixin.deleteAddress(params);
+```
+
+| 参数    | 类型        | 介绍                                |
+| :------ | :---------- | :---------------------------------- |
+| asset   | UUID String | 资产的 `asset_id`                   |
+| address | UUID String | 提现的 `address_id`，获取方式见下文 |
+| amount  | String      | 提现的金额                          |
+| trace   | UUID String | 本次提现的 `trace_id`。             |
+| memo    | String      | 可选，提现的备注信息。              |
+
+:::info `address_id` 获取方式
+
+1. 需要用户先授权 `资产` 权限，[详情参见这里](/docs/server/client/user#1-用户授权登陆)
+2. 通过服务端 sdk 里的方法拿到 `address_id`，[详情参见这里](/docs/server/userWithToken#6-获取用户某个资产的所有提现地址)
+
+:::

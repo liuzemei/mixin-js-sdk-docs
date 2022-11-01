@@ -51,13 +51,13 @@ const config = {
           type: 'doc',
           docId: 'server/intro',
           position: 'left',
-          label: 'Server',
+          label: '服务端',
         },
         {
           type: 'doc',
           docId: 'web/intro',
           position: 'left',
-          label: 'Web',
+          label: '浏览器端',
         },
         // {
         //   type: "localeDropdown",
