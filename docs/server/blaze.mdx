@@ -49,3 +49,31 @@ let client = new BlazeClient(
 >
 > 1. data 默认为 `base64` 编码，如果需要解析为明文，需要将 `parse` 设置为 `true`
 > 2. 默认是需要手动调用 `ack` 方法，将消息标记为已读，如果设置了 `syncAck` 为 `true`，则会在接收到用户的消息，处理完后自动 ack. [具体方法参见](/docs/server/client/message#16-发送-ack-消息)
+
+### 2. 使用 `client.loopBlaze` 来接收消息
+
+```js
+client.loopBlaze({
+  async onMessage(msg) {
+    console.log(msg);
+  },
+  async onAckReceipt(msg) {
+    console.log(msg);
+  },
+  async onTransfer(msg) {
+    console.log(msg);
+  },
+  async onConversatioin(msg) {
+    console.log(msg);
+  },
+});
+```
+
+| 参数            | 必选 | 介绍                         |
+| :-------------- | :--- | :--------------------------- |
+| onMessage       | ✅   | 接受到的所有消息             |
+| onAckReceipt    | ❌   | 可选，接收到的 ack 消息      |
+| onTransfer      | ❌   | 可选，接收到的 转账 消息     |
+| onConversatioin | ❌   | 可选，接收到的 群聊相关 消息 |
+
+当不指定 `onAckReceipt`、`onTransfer`、`onConversatioin` 时，所有相关的消息都会走 `onMessage`。
