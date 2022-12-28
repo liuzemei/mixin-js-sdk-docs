@@ -194,8 +194,16 @@ client.searchUser('+8617718523520');
 授权其他机器人，获得 `authorization_token` 以完成其他机器人的授权。
 
 ```js
-client.getAuthorizeCode(`f6deb534-13bd-45f0-9b34-0d618827f500`); // 参数为要授权的机器人的 client_id
+client.getAuthorizeCode({
+  client_id: `f6deb534-13bd-45f0-9b34-0d618827f500`,
+  scopes: ['PROFILE:READ'],
+  // pin: '',
+}); // 参数为要授权的机器人的 client_id
 ```
+
+:::tip 提示
+此方法需要 `pin`，如果构建 `client` 的时候，没有传入的话，此方法可以传入 `pin`
+:::
 
 返回值
 
