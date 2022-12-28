@@ -188,3 +188,77 @@ client.searchUser('+8617718523520');
 :::tip 提示
 此接口有访问频率限制。**频繁请求**会被服务器拒绝。
 :::
+
+### 6. 授权其他机器人
+
+授权其他机器人，获得 `authorization_token` 以完成其他机器人的授权。
+
+```js
+client.getAuthorizeCode(`f6deb534-13bd-45f0-9b34-0d618827f500`);
+```
+
+返回值
+
+```json
+{
+  "type": "authorization",
+  "authorization_id": "5fbc7e9c-63c2-47a7-9565-05817d580ac0",
+  "authorization_code": "599fd289cffe4xxxxxxxxxxxxxx63b6d33c3ac551bd2845ddd9b81dd44c75016",
+  "scopes": [ "PROFILE:READ" ],
+  "code_id": "24491ebe-9992-4f02-85ec-a374a2e005d5",
+  "app": {
+    "type": "app",
+    "app_id": "f6deb534-13bd-45f0-9b34-0d618827f500",
+    "app_number": "7000103988",
+    "redirect_uri": "https://cnb.mixinbots.com/auth",
+    "home_uri": "https://cnb.mixinbots.com/",
+    "name": "CNB超级社群",
+    "icon_url": "https://mixin-images.zeromesh.net/Aplananzgr4Txcks0b7MvC3azIUG4eTbcHigM4QUe1yFbrI5HbabutOp2l8W-CLej5zCwA7d6wGxkNK7QDFJEf1pD7XMxIuFfUZF=s256",
+    "description": "CNB（ chui niu bi ），娱乐、开心、最牛的币圈生活调味剂😁",
+    "capabilities": [ "CONTACT", "GROUP", "IMMERSIVE", "ENCRYPTED" ],
+    "resource_patterns": [ "https://cnb.mixinbots.com/" ],
+    "category": "SOCIAL",
+    "creator_id": "6ac866ba-d55e-4fcd-a416-5547fc709e07",
+    "updated_at": "2022-06-09T08:59:54.25097973Z",
+    "is_verified": false,
+    "capabilites": [ "CONTACT", "GROUP", "IMMERSIVE", "ENCRYPTED" ]
+  },
+  "user": {
+    "type": "user",
+    "user_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+    "identity_number": "7000100180",
+    "phone": "",
+    "full_name": "开发专用",
+    "biography": "devdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdev",
+    "avatar_url": "",
+    "relationship": "",
+    "mute_until": "0001-01-01T00:00:00Z",
+    "created_at": "2018-05-13T03:59:22.547773979Z",
+    "is_verified": false,
+    "is_scam": false,
+    "code_id": "",
+    "code_url": "",
+    "app": {
+      "type": "app",
+      "app_id": "11efbb75-e7fe-44d7-a14f-698535289310",
+      "app_number": "7000100180",
+      "redirect_uri": "http://192.168.50.160:8000/auth",
+      "home_uri": "http://192.168.50.160:8000",
+      "name": "开发专用",
+      "icon_url": "",
+      "description": "devdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdevdev",
+      "capabilities": [Array],
+      "resource_patterns": [Array],
+      "category": "SOCIAL",
+      "creator_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+      "updated_at": "2022-06-20T06:43:10.651056638Z",
+      "is_verified": false,
+      "app_secret": "",
+      "session_secret": "",
+      "capabilites": [Array]
+    }
+  },
+  "created_at": "2022-12-28T10:36:42.039192156Z",
+  "accessed_at": "0001-01-01T00:00:00Z"
+}
+```
