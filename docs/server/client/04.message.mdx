@@ -17,7 +17,7 @@ sidebar_position: 4
 
 :::
 
-## 发消息给单个用户
+## 1. 发消息给单个用户
 
 ### 1. 发送文字消息
 
@@ -185,11 +185,11 @@ client.sendLocationMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
 ### 13. 发送按钮消息
 
 ```js
-client.sendAppButtonMsg("e8e8cd79-cd40-4796-8c54-3a13cfe50115", [
+client.sendAppButtonMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', [
   {
-    label: "", // 按钮的文本内容
-    color: "", // 16进制按钮的颜色，如： #FF0000
-    action: "", // 按钮的跳转链接
+    label: '', // 按钮的文本内容
+    color: '', // 16进制按钮的颜色，如： #FF0000
+    action: '', // 按钮的跳转链接
   },
 ]);
 ```
@@ -252,7 +252,49 @@ client.sendAcknowledgements([
 
 :::
 
-## 2. 发送多条消息
+## 2. 文件操作
+
+### 1. 上传文件
+
+```js
+client.uploadFile(file);
+```
+
+返回值
+
+```json
+{
+  "view_url": "xxx",
+  "attachment_id": "xxx"
+}
+```
+
+:::tip
+
+1. `file` 是一个 `File` 对象，可以通过 `fs.readFileSync` 来获取。
+2. 返回值 `view_url` 是文件的下载地址。
+3. 返回值 `attachment_id` 可以用作发消息。
+
+:::
+
+### 2. 获取文件
+
+解析出消息之后，会获得 `attachment_id`，通过 `attachment_id` 可以获取文件。
+
+```js
+client.showAttachment(attachment_id);
+```
+
+返回值
+
+```json
+{
+  "view_url": "xxx",
+  "attachment_id": "xxx"
+}
+```
+
+## 3. 发送多条消息
 
 ```js
 client.sendMessages([
