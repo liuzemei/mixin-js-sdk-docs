@@ -1,0 +1,198 @@
+---
+sidebar_position: 5
+---
+
+# 加密消息
+
+:::danger
+
+1. 用法同 [普通消息](/docs/server/client/message) 一样，只是调用的方法名前面多了一个 `Encrypt` 前缀，如：`client.sendEncryptTextMsg`。
+2. 请确保你的机器人已经开启了加密消息功能。
+3. 请确保 sdk 版本 >= `3.1.12`
+
+:::
+
+## 1. 发加密消息到单聊
+
+:::info
+
+1. 使用此系列接口时，会在启动程序的目录自动创建 `.session` 文件夹。
+2. 当重复给同一个用户发送消息时，会自动使用缓存的 `session`，不会重复去服务器获取 `session`。
+3. 当 `session` 失效时，会自动更新 `session`。使用上来说，开发者无需关心这个细节。
+
+:::
+
+### 1. 发送文字消息
+
+```js
+client.sendEncryptTextMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', 'hello');
+```
+
+> 1. 第一个参数是要发送对象的 `user_id`
+> 2. 第二个参数是要发送的文字
+
+返回值
+
+```json
+{
+  "type": "message",
+  "message_id": "0cb78e16-c600-4b61-8f88-2291d7644e2c",
+  "recipient_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "state": "SUCCESS",
+  "sessions": [
+    { "type": "session", "session_id": "5dbace26-7fe0-4074-bada-18d6201a21af", "public_key": "" },
+    { "type": "session", "session_id": "69738284-409c-4bef-b4f1-9754923134bf", "public_key": "" }
+  ]
+}
+```
+
+> 1. 消息的返回值都一样，以下就省略消息的返回值部分，只介绍调用部分。
+> 2. 为什么 `sessions.length = 2` ? 因为用户可能登陆的有两个设备， 一个设备是桌面端，一个是手机端。
+
+### 2. 发送文章消息
+
+```js
+client.sendEncryptPostMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', '# 一级标题\n## 二级标题\n 正文..');
+```
+
+### 3. 发送图片消息
+
+```js
+client.sendEncryptImageMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 图片的类型，如：image/jpeg
+  width: 300, // 图片的宽度
+  height: 300, // 图片的高度
+  size: 300, // 图片的大小，单位是字节
+  thumbnail: '', // 可选，缩略图的 base64
+});
+```
+
+### 4. 发送文件消息
+
+```js
+client.sendEncryptDataMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 图片的类型，如：image/jpeg
+  size: 300, // 图片的大小，单位是字节
+  name: '', // 文件显示的名字
+});
+```
+
+### 5. 发送贴纸消息
+
+```js
+client.sendEncryptStickerMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  sticker_id: '', // 贴纸的唯一标识
+  name: '', // 可选，贴纸的名字
+  album_id: '', // 可选，贴纸的所属相册
+});
+```
+
+### 6. 发送联系人消息
+
+```js
+client.sendEncryptContactMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  user_id: '',
+});
+```
+
+### 7. 发送音频消息
+
+```js
+client.sendEncryptAudioMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 音频的类型，目前只支持：audio/ogg
+  size: 300, // 音频的大小，单位是字节
+  duration: 300, // 音频的时长，单位是秒
+  wave_form: '', // 可选，音频轨迹 base64
+});
+```
+
+### 8. 发送直播消息
+
+```js
+client.sendEncryptLiveMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  width: 300, // 直播卡片的宽度
+  height: 300, // 直播卡片的高度
+  thumb_url: '', // 直播卡片的缩略图链接
+  url: '', // 直播卡片的视频地址
+  shareable: false, // 可选，是否可分享
+});
+```
+
+### 9. 发送视频消息
+
+```js
+client.sendEncryptVideoMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  attachment_id: '', // 文件的唯一标识
+  mime_type: '', // 视频的类型，目前只支持：video/mp4
+  size: 300, // 视频的大小，单位是字节
+  duration: 300, // 视频的时长，单位是秒
+  width: 300, // 视频的宽度
+  height: 300, // 视频的高度
+  thumbnail: '', // 可选，视频的缩略图 base64
+});
+```
+
+### 10. 发送位置消息
+
+```js
+client.sendEncryptLocationMsg('e8e8cd79-cd40-4796-8c54-3a13cfe50115', {
+  latitude: '', // 纬度
+  longitude: '', // 经度
+  address: '', // 可选
+  name: '', // 可选
+});
+```
+
+### 11. 自行构建消息
+
+```js
+client.sendEncryptMessage({
+  conversation_id: '', // 会话的唯一标识
+  message_id: '', // 消息的唯一标识
+  category: '', // 消息的类型，详细的类型请查看 SDK
+  data: '', // base64 的消息内容
+  recipient_id: '', // 可选，消息的接收者，发给群聊时，不带这个参数就会发给群聊的每一个人。带上的话，就只会发给群聊的某一个人
+  representative_id: '', // 可选，消息的发送者，
+  quote_message_id: '', // 可选，被引用的消息的唯一标识
+});
+```
+
+### 12. 批量发送消息
+
+```js
+client.sendEncryptMessages([
+  {
+    conversation_id: '', // 会话的唯一标识
+    message_id: '', // 消息的唯一标识
+    category: '', // 消息的类型，详细的类型请查看 SDK
+    data: '', // base64 的消息内容
+    recipient_id: '', // 可选，消息的接收者，发给群聊时，不带这个参数就会发给群聊的每一个人。带上的话，就只会发给群聊的某一个人
+    representative_id: '', // 可选，消息的发送者，
+    quote_message_id: '', // 可选，被引用的消息的唯一标识
+  },
+]);
+```
+
+## 2. 文件操作
+
+### 1. attachment 解密
+
+> 1. 如果消息内跟 `attachment_id` 同级的，还有 `key` 和 `digest`，说明该 `attchment` 已经被加密（对称加密）。
+> 2. 下载下来的 `attachment` 是加密的，需要调用 `decryptAttachment` 方法解密。
+> 3. 或者直接调用 `client.decryptAttachmentByMsgData(msgData)` 方法，传入消息的 `data`，会自动解密，并返回 `Buffer` 对象。返回之后，可以直接调用 `fs.writeFile` 方法保存到本地。
+
+```js
+const buf = await client.decryptAttachmentByMsgData({ attachment_id, key });
+fs.writeFileSync('./test.png', buf); // 假设是一个图片文件
+```
+
+```js
+decryptAttachment(data, keys);
+// data: Buffer
+// key: String
+```
+
+返回值都是 `Buffer` 对象
